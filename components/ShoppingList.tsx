@@ -1,11 +1,12 @@
-import { Text, TouchableOpacity, View, StyleSheet, Alert } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../theme";
 
 type Prop = {
   name: string;
+  isDone?: boolean;
 };
 
-export function ShoppingList({ name }: Prop) {
+export function ShoppingList({ name, isDone }: Prop) {
   const handleDelete = () => {
     Alert.alert(`Are you sure to delete ${name}?`, "This action is permanent", [
       {
@@ -20,10 +21,19 @@ export function ShoppingList({ name }: Prop) {
     ]);
   };
   return (
-    <View style={styles.itemContainer}>
-      <Text style={styles.itemText}>{name}</Text>
+    <View
+      style={[
+        styles.itemContainer,
+        isDone ? styles.completedContainer : undefined,
+      ]}
+    >
+      <Text
+        style={[styles.itemText, isDone ? styles.completedText : undefined]}
+      >
+        {name}
+      </Text>
       <TouchableOpacity
-        style={styles.button}
+        style={[styles.button, isDone ? styles.completedButton : undefined]}
         onPress={handleDelete}
         activeOpacity={0.5}
       >
@@ -34,10 +44,9 @@ export function ShoppingList({ name }: Prop) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colorWhite,
-    justifyContent: "center",
+  completedContainer: {
+    borderBlockColor: theme.colorLightGrey,
+    borderBottomColor: theme.colorLightGrey,
   },
   itemContainer: {
     paddingVertical: 16,
@@ -52,6 +61,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "200",
   },
+  completedButton: {
+    backgroundColor: theme.colorGrey,
+  },
   button: {
     color: theme.colorWhite,
     backgroundColor: theme.colorBlack,
@@ -62,5 +74,10 @@ const styles = StyleSheet.create({
     color: theme.colorWhite,
     fontWeight: "bold",
     textTransform: "uppercase",
+  },
+  completedText: {
+    textDecorationColor: theme.colorGrey,
+    textDecorationLine: "line-through",
+    color: theme.colorGrey,
   },
 });
