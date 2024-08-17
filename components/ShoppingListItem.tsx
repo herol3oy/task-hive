@@ -1,18 +1,31 @@
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { theme } from "../theme";
 
 type Prop = {
   name: string;
   isDone?: boolean;
+  onDelete: () => void;
+  onToggleComplete: () => void;
 };
 
-export function ShoppingListItem({ name, isDone }: Prop) {
+export function ShoppingListItem({
+  name,
+  isDone,
+  onDelete,
+  onToggleComplete,
+}: Prop) {
   const handleDelete = () => {
     Alert.alert(`Are you sure to delete ${name}?`, "This action is permanent", [
       {
         text: "Yes",
-        onPress: () => console.log("Deleting..."),
+        onPress: () => onDelete(),
         style: "destructive",
       },
       {
@@ -22,11 +35,12 @@ export function ShoppingListItem({ name, isDone }: Prop) {
     ]);
   };
   return (
-    <View
+    <Pressable
       style={[
         styles.itemContainer,
         isDone ? styles.completedContainer : undefined,
       ]}
+      onPress={onToggleComplete}
     >
       <Text
         style={[styles.itemText, isDone ? styles.completedText : undefined]}
@@ -40,7 +54,7 @@ export function ShoppingListItem({ name, isDone }: Prop) {
           color={isDone ? theme.colorGrey : theme.colorRed}
         />
       </TouchableOpacity>
-    </View>
+    </Pressable>
   );
 }
 
@@ -48,6 +62,7 @@ const styles = StyleSheet.create({
   completedContainer: {
     borderBlockColor: theme.colorLightGrey,
     borderBottomColor: theme.colorLightGrey,
+    backgroundColor: theme.colorLightGrey,
   },
   itemContainer: {
     paddingVertical: 16,
