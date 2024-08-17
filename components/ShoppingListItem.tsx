@@ -7,7 +7,7 @@ type Prop = {
   isDone?: boolean;
 };
 
-export function ShoppingList({ name, isDone }: Prop) {
+export function ShoppingListItem({ name, isDone }: Prop) {
   const handleDelete = () => {
     Alert.alert(`Are you sure to delete ${name}?`, "This action is permanent", [
       {
