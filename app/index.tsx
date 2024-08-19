@@ -1,7 +1,17 @@
-import { useState } from "react";
-import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  LayoutAnimation,
+} from "react-native";
 import { ShoppingListItem } from "../components/ShoppingListItem";
 import { theme } from "../theme";
+import { useEffect, useState } from "react";
+import { getFromStorage, saveToStorage } from "../utils/storage";
+
+const storageKey = "shopping-list";
 
 type ShoppingListItemType = {
   id: string;
@@ -14,6 +24,17 @@ export default function App() {
   const [value, setValue] = useState("");
   const [shoppingList, setShoppingList] = useState<ShoppingListItemType[]>([]);
 
+  useEffect(() => {
+    const fetchInitial = async () => {
+      const data = await getFromStorage(storageKey);
+      if (data) {
+        setShoppingList(data);
+      }
+    };
+
+    fetchInitial();
+  }, []);
+
   const handleSubmit = () => {
     if (value) {
       const newShoppingList = [
@@ -24,14 +45,18 @@ export default function App() {
         },
         ...shoppingList,
       ];
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       setShoppingList(newShoppingList);
+      saveToStorage(storageKey, newShoppingList);
       setValue("");
     }
   };
 
   const handleDelete = (id: string) => {
     const newShoppingList = shoppingList.filter((item) => item.id !== id);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setShoppingList(newShoppingList);
+    saveToStorage(storageKey, newShoppingList);
   };
 
   const handleToggleComplete = (id: string) => {
@@ -46,7 +71,9 @@ export default function App() {
         };
       } else return item;
     });
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setShoppingList(newShoppingList);
+    saveToStorage(storageKey, newShoppingList);
   };
   return (
     <FlatList
