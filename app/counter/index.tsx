@@ -9,9 +9,9 @@ import { getFromStorage, saveToStorage } from "../../utils/storage";
 
 const frequency = 10 * 1000; // 10 seconds in ms
 
-const countdownStorageKey = "taskly-countdown";
+export const countdownStorageKey = "taskly-countdown";
 
-type PersistedCountdownState = {
+export type PersistedCountdownState = {
   currentNotificationId: string | undefined;
   completedAtTimestamps: number[];
 };
